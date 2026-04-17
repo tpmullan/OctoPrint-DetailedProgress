@@ -86,8 +86,11 @@ class DetailedProgress(octoprint.plugin.EventHandlerPlugin,
 	def _update_progress(self, currentData):
 		progressPerc = int(currentData["progress"]["completion"])
 		if self._M73_R:
-			printMinutesLeft = int(currentData["progress"]["printTimeLeft"] / 60)
-			self._printer.commands("M73 P{} R{}".format(progressPerc, printMinutesLeft))
+			try:
+				printMinutesLeft = int(currentData["progress"]["printTimeLeft"] / 60)
+				self._printer.commands("M73 P{} R{}".format(progressPerc, printMinutesLeft))
+			except TypeError:
+				self._printer.commands("M73 P{}".format(progressPerc))
 		else:
 			self._printer.commands("M73 P{}".format(progressPerc))
 
