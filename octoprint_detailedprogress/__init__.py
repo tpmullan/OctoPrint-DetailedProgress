@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import time
 import socket
+import os
 
 import octoprint.plugin
 import octoprint.util
@@ -176,6 +177,9 @@ class DetailedProgress(octoprint.plugin.EventHandlerPlugin,
 		return self._etl_format.format(**locals())
 
 	def _get_host_ip(self):
+		host_ip = os.environ.get("HOST_IP")
+		if host_ip:
+			return host_ip
 		return [l for l in (
 			[ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1], [
 				[(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in
